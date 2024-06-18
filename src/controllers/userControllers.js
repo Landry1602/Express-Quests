@@ -64,7 +64,7 @@ const getUsersById = (req, res) => {
         [firstname, lastname, email, city, language]
     )
     .then(([result]) => {
-        res.status(201).send({ id: result.insetId });
+        res.status(201).send({ id: result.insertId });
     })
     .catch((err) => {
         console.error(err);
