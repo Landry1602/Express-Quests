@@ -32,7 +32,6 @@ const getUsers = (req, res) => {
     res.json(users);
   })
   .catch((err) => {
-    console.error(err);
     res.sendStatus(500);
   });
 };
@@ -50,7 +49,6 @@ const getUsersById = (req, res) => {
         }
       })
       .catch((err) => {
-        console.error(err);
         res.sendStatus(500);
       });
   };
@@ -67,7 +65,6 @@ const getUsersById = (req, res) => {
         res.status(201).send({ id: result.insertId });
     })
     .catch((err) => {
-        console.error(err);
         res.sendStatus(500);
     });
   };
@@ -90,7 +87,6 @@ const getUsersById = (req, res) => {
       }
     })
     .catch((err) => {
-      console.error(err);
       res.sendStatus(500);
     });
   };
