@@ -5,6 +5,8 @@ const app = require("../src/app");
 
 const database = require("../database")
 
+let testUserId //used to have only one id for POST and DELETE tests
+
 afterAll(() => database.end());
 
 describe("GET /api/users", () => {
@@ -45,10 +47,12 @@ describe("POST /api/users", () => {
 
     const response = await request(app).post("/api/users").send(newUser);
 
-    //expect(response.headers["content-type"]).toMatch(/json/);
+    expect(response.headers["content-type"]).toMatch(/json/);
     expect(response.status).toEqual(201);
     expect(response.body).toHaveProperty("id");
     expect(typeof response.body.id).toBe("number");
+
+    testUserId = response.body.id;
 
     const [result] = await database.query(
       "SELECT * FROM users WHERE id=?",
@@ -87,7 +91,7 @@ describe("POST /api/users", () => {
 });
 
 describe("PUT /api/users/:id", () => {
-  it("shoul edit user", async () => {
+  it("should edit user", async () => {
     const newUser = {
       firstname: "Arthur",
       lastname: "Dupont",
@@ -159,6 +163,27 @@ describe("PUT /api/users/:id", () => {
     };
 
     const response = await request(app).put("/api/users/0").send(newUser);
+
+    expect(response.status).toEqual(404);
+  });
+});
+
+describe("DELETE /api/users/:id", () => {
+  it("should delete one user", async () => {
+    const response = await request(app).delete(`/api/users/${testUserId}`);
+
+    expect(response.status).toEqual(204);
+
+    const [result] = await database.query(
+      "SELECT * FROM users WHERE id=?",
+         [testUserId]
+       );
+
+    expect(result.length).toEqual(0);
+  });
+
+  it("should return an error", async () => {
+    const response = await request(app).get("/api/users/0");
 
     expect(response.status).toEqual(404);
   });

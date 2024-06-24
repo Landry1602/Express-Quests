@@ -4,6 +4,8 @@ const app = require("../src/app");
 
 const database = require("../database")
 
+let testMovieId //used to have only one id for POST and DELETE tests
+
 afterAll(() => database.end());
 
 describe("GET /api/movies", () => {
@@ -48,6 +50,8 @@ describe("POST /api/movies", () => {
     expect(response.status).toEqual(201);
     expect(response.body).toHaveProperty("id");
     expect(typeof response.body.id).toBe("number");
+
+    testMovieId = response.body.id;
 
     const [result] = await database.query(
       "SELECT * FROM movies WHERE id=?",
@@ -158,6 +162,27 @@ describe("PUT /api/movies/:id", () => {
     };
 
     const response = await request(app).put("/api/movies/0").send(newMovie);
+
+    expect(response.status).toEqual(404);
+  });
+});
+
+describe("DELETE /api/movies/:id", () => {
+  it("should delete one movie", async () => {
+    const response = await request(app).delete(`/api/movies/${testMovieId}`);
+
+    expect(response.status).toEqual(204);
+
+    const [result] = await database.query(
+      "SELECT * FROM movies WHERE id=?",
+         [testMovieId]
+       );
+
+    expect(result.length).toEqual(0);
+  });
+
+  it("should return an error", async () => {
+    const response = await request(app).get("/api/movies/0");
 
     expect(response.status).toEqual(404);
   });
