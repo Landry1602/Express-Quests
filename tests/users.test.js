@@ -45,7 +45,7 @@ describe("POST /api/users", () => {
 
     const response = await request(app).post("/api/users").send(newUser);
 
-    //expect(response.headers["content-type"]).toMatch(/json/);
+    expect(response.headers["content-type"]).toMatch(/json/);
     expect(response.status).toEqual(201);
     expect(response.body).toHaveProperty("id");
     expect(typeof response.body.id).toBe("number");
