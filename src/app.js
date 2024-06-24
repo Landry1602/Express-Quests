@@ -17,6 +17,7 @@ app.post("/api/movies", validateMovie, movieControllers.postMovie);
 
 app.put("/api/movies/:id", validateMovie, movieControllers.updateMovie);
 
+app.delete("/api/movies/:id", movieControllers.deleteMovie);
 
 app.get("/api/users", userControllers.getUsers);
 app.get("/api/users/:id", userControllers.getUsersById);
@@ -24,5 +25,7 @@ app.get("/api/users/:id", userControllers.getUsersById);
 app.post("/api/users", validateUser, userControllers.postUser);
 
 app.put("/api/users/:id", validateUser, userControllers.updateUser);
+
+app.delete("/api/users/:id", userControllers.deleteUser);
 
 module.exports = app;
